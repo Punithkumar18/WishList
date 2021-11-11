@@ -1,15 +1,23 @@
 import './App.css';
-import {useState} from 'react'
+import {useState,useEffect} from 'react'
 
 
 function WishList(){
   const [text,setText] = useState('');
   const [wishList,setWishList] = useState([]);
+  const [wishSaved, setWishSaved] = useState(-1);
+
+  useEffect(() => {
+    
+    localStorage.setItem('wishList',JSON.stringify(wishList))
+    setWishSaved((wishSaved)=>wishSaved + 1)
+    
+  }, [wishList])
 
 
  const wishHandler=()=>{
 
-setWishList(wishList.concat(text));
+setWishList((wishList)=>wishList.concat(text));
 setText('')
 
 }
@@ -17,11 +25,12 @@ setText('')
 
   return(
     <div>
-      <h1>WishList</h1>
+      <h1 style={{color:'grey'}}>WishList</h1>
       <input
         onChange={(e)=>setText(e.target.value)}
         type="text"
         value={text}
+        placeholder="Enter a wish"
       />
       <button onClick={wishHandler}>ADD</button>
       {wishList.map((wish)=>(
@@ -30,6 +39,8 @@ setText('')
           </div>
         )
       )}
+      <h5>wishes Saved:{wishSaved}</h5>
+
       </div>
     )
 }
